@@ -99,7 +99,7 @@ function FunnelStep({ label, scans, patients, tone, note, icon: Icon }: { label:
 }
 
 function FunnelArrow() {
-  return <ArrowRight className="self-center h-3.5 w-3.5 text-[var(--text-muted)] shrink-0" />;
+  return <ArrowRight className="hidden sm:inline-block self-center h-3.5 w-3.5 text-[var(--text-muted)] shrink-0" />;
 }
 
 function SectionTitle({ eyebrow, title, lede, icon: Icon }: { eyebrow: string; title: string; lede?: string; icon?: LucideIcon }) {
@@ -131,48 +131,34 @@ function MoversTable({ rows, onOpen, positive }: { rows: Patient[]; onOpen: (p: 
   const iconColor = positive ? 'text-[var(--color-success-dark)]' : 'text-[var(--color-error-dark)]';
   const deltaColor = positive ? 'text-[var(--color-success-dark)]' : 'text-[var(--color-error-dark)]';
   return (
-    <table className="w-full text-[12px]">
-      <thead className="text-[var(--text-muted)] text-[10px] uppercase tracking-[0.1em]">
-        <tr>
-          <th className="text-left font-semibold pb-2">Patient</th>
-          <th className="text-right font-semibold pb-2 whitespace-nowrap" title="Number of scans on record">Scans</th>
-          <th className="text-right font-semibold pb-2 whitespace-nowrap" title="Days between first and latest scan">Span</th>
-          <th className="text-right font-semibold pb-2 pl-3 whitespace-nowrap" title="Change from first to latest reading (first → latest)">First → Latest Δ</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map(p => {
-          const doc = doctorShort(p.doctor_id);
-          return (
-            <tr
-              key={p.pm}
-              onClick={() => onOpen(p)}
-              className="border-t border-[var(--border-subtle)] hover:bg-[var(--bg-tertiary)] cursor-pointer"
-            >
-              <td className="py-2 pr-2">
-                <div className="flex items-center gap-2">
-                  <Icon className={cn('h-3.5 w-3.5 shrink-0', iconColor)} />
-                  <div className="min-w-0">
-                    <div className="text-[var(--text-primary)] truncate">{p.name || '—'}</div>
-                    <div className="font-mono text-[10.5px] text-[var(--text-muted)] truncate">{p.pm} · {doc}</div>
-                  </div>
-                </div>
-              </td>
-              <td className="py-2 text-right text-[11.5px] text-[var(--text-secondary)] tabular-nums whitespace-nowrap">{p.numScans}</td>
-              <td className="py-2 text-right text-[11.5px] text-[var(--text-secondary)] tabular-nums whitespace-nowrap">{p.daysBetween}d</td>
-              <td className="py-2 pl-3 text-right whitespace-nowrap">
-                <div className={cn('text-[11.5px] font-medium font-mono', deltaColor)}>
-                  CAP&nbsp;{p.capDelta > 0 ? '+' : ''}{p.capDelta}
-                </div>
-                <div className={cn('text-[11.5px] font-medium font-mono', deltaColor)}>
-                  LSM&nbsp;{p.lsmDelta > 0 ? '+' : ''}{p.lsmDelta}
-                </div>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <ul className="divide-y divide-[var(--border-subtle)]">
+      {rows.map(p => {
+        const doc = doctorShort(p.doctor_id);
+        return (
+          <li
+            key={p.pm}
+            onClick={() => onOpen(p)}
+            className="flex items-center gap-3 py-2.5 cursor-pointer hover:bg-[var(--bg-tertiary)] -mx-2 px-2 rounded-[4px]"
+          >
+            <Icon className={cn('h-4 w-4 shrink-0', iconColor)} />
+            <div className="min-w-0 flex-1">
+              <div className="text-[12.5px] text-[var(--text-primary)] truncate">{p.name || '—'}</div>
+              <div className="text-[10.5px] text-[var(--text-muted)] truncate leading-tight">
+                <span className="font-mono">{p.pm}</span> · {doc} · {p.numScans} scans · {p.daysBetween}d
+              </div>
+            </div>
+            <div className="shrink-0 text-right whitespace-nowrap">
+              <div className={cn('text-[11.5px] font-medium font-mono tabular-nums', deltaColor)}>
+                CAP&nbsp;{p.capDelta > 0 ? '+' : ''}{p.capDelta}
+              </div>
+              <div className={cn('text-[11.5px] font-medium font-mono tabular-nums', deltaColor)}>
+                LSM&nbsp;{p.lsmDelta > 0 ? '+' : ''}{p.lsmDelta}
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -300,13 +286,13 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
   };
 
   return (
-    <div className="max-w-[1440px] mx-auto px-8 py-10">
-      <header className="mb-7">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+      <header className="mb-6 sm:mb-7">
         <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] text-[var(--text-brand)] font-semibold">
           <HeartPulse className="h-3 w-3" />
           Liver Forever · Fibroscan Outcomes
         </div>
-        <h1 className="text-[26px] font-semibold text-[var(--text-primary)] mt-1.5 tracking-tight">Patient Trajectory Dashboard</h1>
+        <h1 className="text-[22px] sm:text-[26px] font-semibold text-[var(--text-primary)] mt-1.5 tracking-tight leading-tight">Patient Trajectory Dashboard</h1>
         <p className="text-[13px] text-[var(--text-secondary)] mt-1.5 max-w-[760px] leading-relaxed">
           Every Fibroscan upload is OCR'd into two numbers — <strong className="text-[var(--text-primary)]">CAP</strong> (steatosis, dB/m) and <strong className="text-[var(--text-primary)]">LSM</strong> (fibrosis, kPa).
           Lower is healthier on both. This dashboard tracks how those numbers move for patients who return for a second scan.
@@ -314,8 +300,8 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
       </header>
 
       {/* Narrative hero — AI gradient */}
-      <div className="relative rounded-[10px] overflow-hidden mb-9 p-[1px] bg-[linear-gradient(135deg,var(--color-brand-primary)_0%,var(--color-accent-indigo)_40%,var(--color-accent-cyan)_100%)]">
-        <div className="relative rounded-[9px] bg-[var(--bg-elevated)] p-6">
+      <div className="relative rounded-[10px] overflow-hidden mb-8 sm:mb-9 p-[1px] bg-[linear-gradient(135deg,var(--color-brand-primary)_0%,var(--color-accent-indigo)_40%,var(--color-accent-cyan)_100%)]">
+        <div className="relative rounded-[9px] bg-[var(--bg-elevated)] p-4 sm:p-6">
           <div className="absolute inset-0 rounded-[9px] bg-[linear-gradient(135deg,rgba(112,48,160,0.06)_0%,rgba(99,102,241,0.04)_40%,rgba(6,182,212,0.06)_100%)] pointer-events-none" />
           <div className="relative">
             <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] font-semibold bg-[linear-gradient(90deg,var(--color-brand-primary),var(--color-accent-indigo),var(--color-accent-cyan))] bg-clip-text text-transparent mb-3">
@@ -550,13 +536,13 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
           lede="Search by name or mobile, filter by trajectory, click any row to open the full scan timeline." />
         <Card hoverable={false} className="!p-0 overflow-hidden">
           <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] flex-wrap">
-            <div className="relative">
+            <div className="relative flex-1 min-w-[160px] sm:flex-none">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--text-muted)]" />
               <input
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Search name or mobile…"
-                className="h-8 pl-8 pr-3 text-[12.5px] rounded-[6px] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] w-[240px] outline-none focus:border-[var(--border-focus)]"
+                className="h-8 pl-8 pr-3 text-[12.5px] rounded-[6px] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] w-full sm:w-[240px] outline-none focus:border-[var(--border-focus)]"
               />
             </div>
 
@@ -623,7 +609,7 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
             </div>
           </div>
           <div className="max-h-[640px] overflow-auto">
-            <table className="w-full text-[12px]">
+            <table className="w-full text-[12px] min-w-[960px]">
               <thead className="sticky top-0 z-[1] bg-[var(--bg-elevated)] text-[var(--text-secondary)] text-[10px] uppercase tracking-[0.1em] shadow-[0_1px_0_var(--border-subtle)]">
                 <tr>
                   <th className="text-left px-4 py-2.5 font-semibold">Patient</th>
@@ -643,9 +629,9 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
                     onClick={() => onOpenPatient(p)}
                     className="border-t border-[var(--border-subtle)] hover:bg-[var(--bg-tertiary)] cursor-pointer"
                   >
-                    <td className="px-4 py-2 text-[var(--text-primary)]">{p.name || '—'}</td>
-                    <td className="px-3 py-2 font-mono text-[11px] text-[var(--text-secondary)]">{p.pm}</td>
-                    <td className="px-3 py-2 text-[var(--text-secondary)] max-w-[220px]">
+                    <td className="px-4 py-2 text-[var(--text-primary)] whitespace-nowrap">{p.name || '—'}</td>
+                    <td className="px-3 py-2 font-mono text-[11px] text-[var(--text-secondary)] whitespace-nowrap">{p.pm}</td>
+                    <td className="px-3 py-2 text-[var(--text-secondary)] max-w-[220px] whitespace-nowrap">
                       <div className="truncate" title={p.doctor_id}>{doctorShort(p.doctor_id)}</div>
                       {p.doctor_id && <div className="font-mono text-[10px] text-[var(--text-muted)]">#{p.doctor_id}</div>}
                     </td>
@@ -657,8 +643,8 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
                     <td className={cn('px-3 py-2 text-right font-mono font-medium tabular-nums', p.lsmDelta < 0 ? 'text-[var(--color-success-dark)]' : p.lsmDelta > 0 ? 'text-[var(--color-error-dark)]' : 'text-[var(--text-muted)]')}>
                       {p.lsmDelta > 0 ? '+' : ''}{p.lsmDelta}
                     </td>
-                    <td className="px-3 py-2">
-                      <Badge variant={overallVariant(p.overall)}>{TREND_LABEL[p.overall]}</Badge>
+                    <td className="px-3 py-2 whitespace-nowrap">
+                      <Badge variant={overallVariant(p.overall)} className="whitespace-nowrap">{TREND_LABEL[p.overall]}</Badge>
                     </td>
                   </tr>
                 ))}
@@ -693,7 +679,7 @@ function PatientView({ patient, onBack }: { patient: Patient; onBack: () => void
   const docMeta = doc ? [doc.clinic, doc.city, doc.state].filter(Boolean).join(' · ') : '';
 
   return (
-    <div className="max-w-[1440px] mx-auto px-8 py-10">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
       <button
         onClick={onBack}
         className="inline-flex items-center gap-1.5 text-[12.5px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] mb-5"
@@ -707,7 +693,7 @@ function PatientView({ patient, onBack }: { patient: Patient; onBack: () => void
             <HeartPulse className="h-3 w-3" />
             Patient Timeline
           </div>
-          <h2 className="text-[24px] font-semibold text-[var(--text-primary)] mt-1 tracking-tight">{patient.name || '—'}</h2>
+          <h2 className="text-[20px] sm:text-[24px] font-semibold text-[var(--text-primary)] mt-1 tracking-tight leading-tight">{patient.name || '—'}</h2>
           <div className="text-[12px] text-[var(--text-secondary)] mt-1.5 flex items-center gap-3 flex-wrap">
             <span className="font-mono">{patient.pm}</span>
             <span className="text-[var(--text-muted)]">·</span>
@@ -771,7 +757,8 @@ function PatientView({ patient, onBack }: { patient: Patient; onBack: () => void
           </div>
           <div className="text-[14px] font-semibold text-[var(--text-primary)] tracking-tight mt-0.5">Every scan on record</div>
         </div>
-        <table className="w-full text-[12px]">
+        <div className="overflow-x-auto">
+        <table className="w-full text-[12px] min-w-[860px]">
           <thead className="bg-[var(--bg-secondary)] text-[var(--text-secondary)] text-[10px] uppercase tracking-[0.1em]">
             <tr>
               <th className="text-left px-4 py-2.5 font-semibold">#</th>
@@ -810,6 +797,7 @@ function PatientView({ patient, onBack }: { patient: Patient; onBack: () => void
             })}
           </tbody>
         </table>
+        </div>
       </Card>
     </div>
   );
