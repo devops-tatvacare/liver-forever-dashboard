@@ -176,6 +176,31 @@ function MoversTable({ rows, onOpen, positive }: { rows: Patient[]; onOpen: (p: 
   );
 }
 
+function FilterSelect({
+  icon: Icon, label, value, onChange, options,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <label className="relative inline-flex items-center" title={label}>
+      <Icon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--text-muted)] pointer-events-none" />
+      <select
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        aria-label={label}
+        className="h-8 pl-8 pr-7 text-[12.5px] rounded-[6px] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] outline-none focus:border-[var(--border-focus)] appearance-none cursor-pointer"
+      >
+        {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+      </select>
+      <ChevronRight className="absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-[var(--text-muted)] pointer-events-none rotate-90" />
+    </label>
+  );
+}
+
 function Pagination({ page, totalPages, onPage }: { page: number; totalPages: number; onPage: (p: number) => void }) {
   if (totalPages <= 1) return null;
   const btn = 'h-7 w-7 inline-flex items-center justify-center rounded-[5px] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-default)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors';
@@ -192,9 +217,22 @@ function Pagination({ page, totalPages, onPage }: { page: number; totalPages: nu
   );
 }
 
+type DirFilter = 'Any' | 'Improved' | 'Worsened' | 'Unchanged';
+const DIR_OPTIONS: DirFilter[] = ['Any', 'Improved', 'Worsened', 'Unchanged'];
+
+function matchDir(delta: number, dir: DirFilter): boolean {
+  if (dir === 'Any') return true;
+  if (dir === 'Improved') return delta < 0;
+  if (dir === 'Worsened') return delta > 0;
+  return delta === 0;
+}
+
 function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpenPatient: (p: Patient) => void }) {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<OverallTrend | 'All'>('All');
+  const [scansMin, setScansMin] = useState<number>(2);
+  const [capDir, setCapDir] = useState<DirFilter>('Any');
+  const [lsmDir, setLsmDir] = useState<DirFilter>('Any');
   const [page, setPage] = useState(1);
 
   const agg = useMemo(() => computeAggregates(patients), [patients]);
@@ -234,11 +272,14 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
     const q = query.trim().toLowerCase();
     return patients
       .filter(p => filter === 'All' ? true : p.overall === filter)
+      .filter(p => p.numScans >= scansMin)
+      .filter(p => matchDir(p.capDelta, capDir))
+      .filter(p => matchDir(p.lsmDelta, lsmDir))
       .filter(p => !q || p.name.toLowerCase().includes(q) || p.pm.includes(q))
       .sort((a, b) => b.numScans - a.numScans);
-  }, [patients, query, filter]);
+  }, [patients, query, filter, scansMin, capDir, lsmDir]);
 
-  useEffect(() => { setPage(1); }, [query, filter]);
+  useEffect(() => { setPage(1); }, [query, filter, scansMin, capDir, lsmDir]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const clampedPage = Math.min(page, totalPages);
@@ -248,7 +289,15 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
   const improvedTotal = agg.bothImproved + agg.noWorsening;
   const worsenedTotal = agg.bothWorsened + agg.noImprovement;
 
-  const filterActive = filter !== 'All' || query.trim().length > 0;
+  const filterActive = filter !== 'All' || query.trim().length > 0 || scansMin > 2 || capDir !== 'Any' || lsmDir !== 'Any';
+
+  const clearFilters = () => {
+    setQuery('');
+    setFilter('All');
+    setScansMin(2);
+    setCapDir('Any');
+    setLsmDir('Any');
+  };
 
   return (
     <div className="max-w-[1440px] mx-auto px-8 py-10">
@@ -507,27 +556,64 @@ function AggregateView({ patients, onOpenPatient }: { patients: Patient[]; onOpe
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Search name or mobile…"
-                className="h-8 pl-8 pr-3 text-[12.5px] rounded-[6px] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] w-[260px] outline-none focus:border-[var(--border-focus)]"
+                className="h-8 pl-8 pr-3 text-[12.5px] rounded-[6px] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] w-[240px] outline-none focus:border-[var(--border-focus)]"
               />
             </div>
-            <div className="relative">
-              <Filter className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--text-muted)] pointer-events-none" />
-              <select
-                value={filter}
-                onChange={e => setFilter(e.target.value as OverallTrend | 'All')}
-                className="h-8 pl-8 pr-3 text-[12.5px] rounded-[6px] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-primary)] outline-none focus:border-[var(--border-focus)]"
-              >
-                <option value="All">All trajectories</option>
-                {TREND_ORDER.map(t => <option key={t} value={t}>{TREND_LABEL[t]}</option>)}
-              </select>
-            </div>
+
+            <FilterSelect
+              icon={Filter}
+              label="Trajectory"
+              value={filter}
+              onChange={v => setFilter(v as OverallTrend | 'All')}
+              options={[
+                { value: 'All', label: 'All trajectories' },
+                ...TREND_ORDER.map(t => ({ value: t, label: TREND_LABEL[t] })),
+              ]}
+            />
+
+            <FilterSelect
+              icon={ListChecks}
+              label="Scans"
+              value={String(scansMin)}
+              onChange={v => setScansMin(Number(v))}
+              options={[
+                { value: '2',  label: '≥2 scans (all)' },
+                { value: '3',  label: '≥3 scans' },
+                { value: '4',  label: '≥4 scans' },
+                { value: '5',  label: '≥5 scans' },
+                { value: '10', label: '≥10 scans' },
+              ]}
+            />
+
+            <FilterSelect
+              icon={TrendingDown}
+              label="ΔCAP"
+              value={capDir}
+              onChange={v => setCapDir(v as DirFilter)}
+              options={DIR_OPTIONS.map(d => ({
+                value: d,
+                label: d === 'Any' ? 'ΔCAP: any' : d === 'Improved' ? 'ΔCAP: improved (↓)' : d === 'Worsened' ? 'ΔCAP: worsened (↑)' : 'ΔCAP: unchanged',
+              }))}
+            />
+
+            <FilterSelect
+              icon={Activity}
+              label="ΔLSM"
+              value={lsmDir}
+              onChange={v => setLsmDir(v as DirFilter)}
+              options={DIR_OPTIONS.map(d => ({
+                value: d,
+                label: d === 'Any' ? 'ΔLSM: any' : d === 'Improved' ? 'ΔLSM: improved (↓)' : d === 'Worsened' ? 'ΔLSM: worsened (↑)' : 'ΔLSM: unchanged',
+              }))}
+            />
+
             {filterActive && (
               <button
-                onClick={() => { setQuery(''); setFilter('All'); }}
+                onClick={clearFilters}
                 className="inline-flex items-center gap-1 h-8 px-2.5 text-[11.5px] rounded-[6px] border border-[var(--border-default)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
               >
                 <X className="h-3 w-3" />
-                Clear
+                Clear all
               </button>
             )}
             <div className="ml-auto text-[11.5px] text-[var(--text-secondary)]">
