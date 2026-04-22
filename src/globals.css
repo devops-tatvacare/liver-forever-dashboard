@@ -1,0 +1,551 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Font Family */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Font Size — +25% across the scale (controls both text-{size} utilities and var(--text-*)) */
+  --text-xs: 14px;
+  --text-sm: 16px;
+  --text-base: 18px;
+  --text-lg: 20px;
+  --text-xl: 23px;
+  
+  /* Colors - Brand */
+  --color-brand-primary: #7030A0;
+  --color-brand-primary-hover: #5C2680;
+  --color-brand-primary-active: #4A1F66;
+  --color-brand-primary-deep: #2D1B69;
+  --color-brand-secondary: #403CCF;
+  --color-brand-accent: #C3C2F0;
+  
+  /* Colors - Neutral */
+  --color-neutral-0: #FFFFFF;
+  --color-neutral-50: #FBFAFF;
+  --color-neutral-100: #F5F4F9;
+  --color-neutral-200: #E8E7EE;
+  --color-neutral-300: #D0CED9;
+  --color-neutral-400: #A8A6B3;
+  --color-neutral-500: #6B6B7B;
+  --color-neutral-600: #49495A;
+  --color-neutral-700: #363642;
+  --color-neutral-800: #252530;
+  --color-neutral-900: #1A1A24;
+  
+  /* Spacing */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-default: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+  
+  /* Shadows - Light mode defaults */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.05), 0 4px 6px rgba(0, 0, 0, 0.03);
+  
+  /* Typography */
+  --text-xs: 14px;
+  --text-sm: 16px;
+  --text-base: 18px;
+  --text-lg: 20px;
+  --text-xl: 23px;
+
+  /* Status palette (used by labels, badges, eval results) */
+  --color-verdict-pass: #16a34a;
+  --color-verdict-fail: #dc2626;
+  --color-verdict-soft-fail: #ca8a04;
+  --color-verdict-critical: #7c2d12;
+  --color-verdict-na: #6b7280;
+
+  /* Difficulty / priority */
+  --color-level-easy: #3b82f6;
+  --color-level-medium: #f59e0b;
+  --color-level-hard: #ef4444;
+
+  /* Category accent palette (eval categories, tag colors) */
+  --color-accent-purple: #8b5cf6;
+  --color-accent-cyan: #06b6d4;
+  --color-accent-orange: #f97316;
+  --color-accent-pink: #ec4899;
+  --color-accent-teal: #14b8a6;
+  --color-accent-indigo: #6366f1;
+  --color-accent-lime: #84cc16;
+  --color-accent-blue: #3b82f6;
+  --color-accent-amber: #f59e0b;
+  --color-accent-sky: #0ea5e9;
+  --color-accent-fuchsia: #d946ef;
+  --color-accent-rose: #f43f5e;
+
+  /* Run type badge colors — muted tones that won't be confused with status */
+  --color-type-batch: #475569;
+  --color-type-adversarial: #6d28d9;
+  --color-type-thread: #0e7490;
+  --color-type-custom: #4338ca;
+  --color-type-evaluation: #0e7490;
+  --color-type-call-quality: #7e22ce;
+
+  /* HTTP method colors */
+  --color-http-get: #10b981;
+  --color-http-post: #6366f1;
+  --color-http-put: #8b5cf6;
+  --color-http-patch: #f59e0b;
+  --color-http-delete: #ef4444;
+
+  /* Gap type colors */
+  --color-gap-underspec: #3b82f6;
+  --color-gap-silent: #f59e0b;
+  --color-gap-leakage: #ef4444;
+  --color-gap-conflicting: #8b5cf6;
+
+  /* Provider brand colors (cost dashboard, provider tags) */
+  --color-provider-gemini: #4285f4;
+  --color-provider-openai: #10a37f;
+  --color-provider-anthropic: #cc785c;
+  --color-provider-azure: #0078d4;
+
+  /* App category colors (cost dashboard stacked charts, app tags) */
+  --color-app-voicerx: #7f56d9;
+  --color-app-kaira: #2e90fa;
+  --color-app-insidesales: #f79009;
+  --color-app-report: #12b76a;
+  --color-app-system: #98a2b3;
+
+  /* Purpose palette — cycling colors for cost dashboard "by purpose" bars */
+  --color-purpose-purple: #7f56d9;
+  --color-purpose-purple-light: #b692f6;
+  --color-purpose-blue: #2e90fa;
+  --color-purpose-blue-light: #84caff;
+  --color-purpose-orange: #f79009;
+  --color-purpose-green: #12b76a;
+  --color-purpose-gray: #475467;
+  --color-purpose-gray-light: #98a2b3;
+
+  /* Chat-specific dimensions */
+  --chat-avatar-size: 32px;
+  --chat-avatar-icon: 16px;
+  --chat-input-min-h: 44px;
+  --chat-input-max-h: 200px;
+  --chat-message-gap: 16px;
+  --chat-bubble-padding-x: 16px;
+  --chat-bubble-padding-y: 12px;
+
+  /* Component tokens */
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 56px;
+  --header-height: 48px;
+
+  /* Overlay width tiers */
+  --overlay-width-sm: 500px;
+  --overlay-width-md: 700px;
+  --overlay-width-lg: 900px;
+
+  /* Z-index scale */
+  --z-base: 1;
+  --z-sticky: 10;
+  --z-dropdown: 50;
+  --z-overlay: 100;
+  --z-popover: 150;
+  --z-modal: 200;
+  --z-tooltip: 300;
+  --z-max: 999;
+}
+
+:root {
+  /* Applied Semantic Tokens - Light Mode */
+  --bg-primary: var(--color-neutral-0);
+  --bg-secondary: var(--color-neutral-50);
+  --bg-tertiary: var(--color-neutral-100);
+  --bg-elevated: var(--color-neutral-0);
+  --bg-overlay: rgba(26, 26, 36, 0.5);
+  
+  --text-primary: var(--color-neutral-600);
+  --text-secondary: var(--color-neutral-500);
+  --text-muted: var(--color-neutral-400);
+  --text-inverse: var(--color-neutral-0);
+  --text-brand: var(--color-brand-primary);
+  --text-on-color: var(--color-neutral-0);
+  
+  --border-default: var(--color-neutral-300);
+  --border-subtle: var(--color-neutral-200);
+  --border-focus: var(--color-brand-primary);
+  --border-brand: var(--color-brand-primary);
+
+  --interactive-primary: var(--color-brand-primary);
+  --interactive-primary-hover: var(--color-brand-primary-hover);
+  --interactive-primary-active: var(--color-brand-primary-active);
+  --interactive-secondary: var(--color-neutral-100);
+  --interactive-secondary-hover: var(--color-neutral-200);
+  --interactive-danger: #EF4444;
+  --interactive-danger-hover: #DC2626;
+  
+  --shadow-focus: 0 0 0 2px var(--color-brand-accent);
+  
+  /* Audio Player */
+  --audio-waveform-base: var(--color-neutral-300);
+  --audio-waveform-progress: var(--color-brand-primary);
+  
+  /* Semantic Colors - Light Mode */
+  --color-success: #10B981;
+  --color-success-light: #D1FAE5;
+  --color-success-dark: #059669;
+  --color-error: #EF4444;
+  --color-error-light: #FEE2E2;
+  --color-error-dark: #DC2626;
+  --color-warning: #F59E0B;
+  --color-warning-light: #FEF3C7;
+  --color-warning-dark: #D97706;
+  --color-info: #6366F1;
+  --color-info-light: #E0E7FF;
+  --color-info-dark: #4F46E5;
+
+  /* Surface tokens for status backgrounds */
+  --surface-success: #f0fdf4;
+  --surface-error: #fef2f2;
+  --surface-warning: #fffbeb;
+  --surface-info: #eef2ff;
+  --surface-neutral: var(--bg-tertiary);
+  --surface-brand-subtle: color-mix(in srgb, var(--interactive-primary) 10%, var(--bg-primary));
+  --surface-brand-hover: color-mix(in srgb, var(--interactive-primary) 16%, var(--bg-primary));
+
+  /* Review mode — light needs stronger values on white bg */
+  --review-glow-lo: color-mix(in srgb, var(--color-brand-primary) 28%, transparent);
+  --review-glow-hi: color-mix(in srgb, var(--color-brand-primary) 44%, transparent);
+  --review-bar-bg: color-mix(in srgb, var(--color-brand-primary) 14%, var(--bg-primary));
+  --review-bar-border: color-mix(in srgb, var(--color-brand-primary) 35%, transparent);
+  --review-bar-shadow: color-mix(in srgb, var(--color-brand-primary) 16%, transparent);
+
+  /* Status border tokens */
+  --border-success: #bbf7d0;
+  --border-error: #fecaca;
+  --border-warning: #fde68a;
+  --border-info: #c7d2fe;
+
+  /* Priority levels (P0 critical / P1 high / P2 medium) */
+  --priority-p0-accent: #ef4444;
+  --priority-p0-text: #991b1b;
+  --priority-p0-bg: #fef2f2;
+  --priority-p0-border: #fecaca;
+  --priority-p1-accent: #f59e0b;
+  --priority-p1-text: #92400e;
+  --priority-p1-bg: #fffbeb;
+  --priority-p1-border: #fde68a;
+  --priority-p2-accent: #3b82f6;
+  --priority-p2-text: #1e40af;
+  --priority-p2-bg: #eff6ff;
+  --priority-p2-border: #bfdbfe;
+
+  /* Heatmap cell scale (red → amber → green with legible text) */
+  --heatmap-critical-bg: #fef2f2;
+  --heatmap-critical-text: #991b1b;
+  --heatmap-low-bg: #fff7ed;
+  --heatmap-low-text: #9a3412;
+  --heatmap-mid-bg: #fffbeb;
+  --heatmap-mid-text: #92400e;
+  --heatmap-good-bg: #ecfdf5;
+  --heatmap-good-text: #065f46;
+  --heatmap-great-bg: #d1fae5;
+  --heatmap-great-text: #064e3b;
+  --heatmap-null-bg: var(--bg-tertiary);
+  --heatmap-null-text: var(--text-muted);
+
+  /* Interactive ghost states */
+  --interactive-ghost: transparent;
+  --interactive-ghost-hover: var(--bg-tertiary);
+
+  /* Code/prose */
+  --bg-code: var(--bg-tertiary);
+  --bg-code-block: var(--bg-tertiary);
+  --border-code: var(--border-subtle);
+
+  /* Chat-specific */
+  --bg-chat-user: transparent;
+  --bg-chat-assistant: var(--bg-secondary);
+  --bg-chat-input: var(--bg-secondary);
+  --border-chat-input: var(--border-default);
+
+  /* Empty-state tiles — used by chat-widget EvidenceBoard */
+  --bg-tile: var(--bg-elevated);
+  --bg-tile-hover: var(--surface-brand-subtle);
+  --border-tile: var(--border-subtle);
+  --border-tile-hover: color-mix(in srgb, var(--interactive-primary) 40%, var(--border-default));
+
+  /* Brand chip — small filled badges referring to tools, tags, etc. */
+  --chip-brand-bg: color-mix(in srgb, var(--interactive-primary) 10%, transparent);
+  --chip-brand-border: color-mix(in srgb, var(--interactive-primary) 22%, transparent);
+  --chip-brand-text: var(--interactive-primary);
+}
+
+[data-theme="dark"] {
+  --bg-primary: var(--color-neutral-900);
+  --bg-secondary: var(--color-neutral-800);
+  --bg-tertiary: var(--color-neutral-700);
+  --bg-elevated: var(--color-neutral-800);
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+  
+  --text-primary: var(--color-neutral-100);
+  --text-secondary: var(--color-neutral-400);
+  --text-muted: var(--color-neutral-500);
+  --text-inverse: var(--color-neutral-900);
+  --text-brand: var(--color-brand-accent);
+  --text-on-color: var(--color-neutral-0);
+  
+  --border-default: var(--color-neutral-600);
+  --border-subtle: var(--color-neutral-700);
+  --border-focus: var(--color-brand-accent);
+  --border-brand: var(--color-brand-accent);
+
+  --interactive-secondary: var(--color-neutral-700);
+  --interactive-secondary-hover: var(--color-neutral-600);
+  --interactive-danger: #EF4444;
+  --interactive-danger-hover: #DC2626;
+  
+  /* Audio Player */
+  --audio-waveform-base: var(--color-neutral-200);
+  --audio-waveform-progress: var(--color-neutral-0);
+  
+  /* Accent palette overrides for dark (bump to -400 shades for legibility) */
+  --color-accent-purple: #a78bfa;
+  --color-accent-cyan: #22d3ee;
+  --color-accent-orange: #fb923c;
+  --color-accent-pink: #f472b6;
+  --color-accent-teal: #2dd4bf;
+  --color-accent-indigo: #818cf8;
+  --color-accent-lime: #a3e635;
+  --color-accent-blue: #60a5fa;
+  --color-accent-amber: #fbbf24;
+  --color-accent-sky: #38bdf8;
+  --color-accent-fuchsia: #e879f9;
+  --color-accent-rose: #fb7185;
+
+  /* Run type badge overrides for dark — slightly lighter for contrast */
+  --color-type-batch: #64748b;
+  --color-type-adversarial: #7c3aed;
+  --color-type-thread: #0891b2;
+  --color-type-custom: #4f46e5;
+  --color-type-evaluation: #0891b2;
+  --color-type-call-quality: #9333ea;
+
+  /* Verdict overrides for dark (deeper greens for white-text badges) */
+  --color-verdict-pass: #059669;
+
+  /* Semantic Colors - Dark Mode (deeper tones for badge legibility) */
+  --color-success: #10B981;
+  --color-success-light: rgba(16, 185, 129, 0.2);
+  --color-success-dark: #047857;
+  --color-error: #F87171;
+  --color-error-light: rgba(239, 68, 68, 0.2);
+  --color-error-dark: #DC2626;
+  --color-warning: #FBBF24;
+  --color-warning-light: rgba(245, 158, 11, 0.2);
+  --color-warning-dark: #D97706;
+  --color-info: #818CF8;
+  --color-info-light: rgba(99, 102, 241, 0.2);
+  --color-info-dark: #4F46E5;
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-default: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+
+  /* Surface tokens - dark variants */
+  --surface-success: rgba(16, 185, 129, 0.1);
+  --surface-error: rgba(239, 68, 68, 0.1);
+  --surface-warning: rgba(245, 158, 11, 0.1);
+  --surface-info: rgba(99, 102, 241, 0.1);
+  --surface-neutral: var(--bg-tertiary);
+  --surface-brand-subtle: color-mix(in srgb, var(--interactive-primary) 18%, var(--bg-primary));
+  --surface-brand-hover: color-mix(in srgb, var(--interactive-primary) 26%, var(--bg-primary));
+
+  /* Review mode — dark: brand pops against dark bg at lower % */
+  --review-glow-lo: color-mix(in srgb, var(--color-brand-primary) 22%, transparent);
+  --review-glow-hi: color-mix(in srgb, var(--color-brand-primary) 36%, transparent);
+  --review-bar-bg: color-mix(in srgb, var(--color-brand-primary) 20%, var(--bg-primary));
+  --review-bar-border: color-mix(in srgb, var(--color-brand-primary) 40%, transparent);
+  --review-bar-shadow: color-mix(in srgb, var(--color-brand-primary) 20%, transparent);
+
+  --border-success: rgba(16, 185, 129, 0.3);
+  --border-error: rgba(239, 68, 68, 0.3);
+  --border-warning: rgba(245, 158, 11, 0.3);
+  --border-info: rgba(99, 102, 241, 0.3);
+
+  /* Priority levels — dark mode */
+  --priority-p0-accent: #ef4444;
+  --priority-p0-text: #fca5a5;
+  --priority-p0-bg: rgba(239, 68, 68, 0.1);
+  --priority-p0-border: rgba(239, 68, 68, 0.3);
+  --priority-p1-accent: #f59e0b;
+  --priority-p1-text: #fcd34d;
+  --priority-p1-bg: rgba(245, 158, 11, 0.1);
+  --priority-p1-border: rgba(245, 158, 11, 0.3);
+  --priority-p2-accent: #3b82f6;
+  --priority-p2-text: #93c5fd;
+  --priority-p2-bg: rgba(59, 130, 246, 0.1);
+  --priority-p2-border: rgba(59, 130, 246, 0.3);
+
+  /* Heatmap cell scale — dark mode (muted backgrounds, light text) */
+  --heatmap-critical-bg: rgba(239, 68, 68, 0.2);
+  --heatmap-critical-text: #fca5a5;
+  --heatmap-low-bg: rgba(249, 115, 22, 0.2);
+  --heatmap-low-text: #fdba74;
+  --heatmap-mid-bg: rgba(245, 158, 11, 0.2);
+  --heatmap-mid-text: #fcd34d;
+  --heatmap-good-bg: rgba(16, 185, 129, 0.15);
+  --heatmap-good-text: #6ee7b7;
+  --heatmap-great-bg: rgba(16, 185, 129, 0.25);
+  --heatmap-great-text: #a7f3d0;
+  --heatmap-null-bg: var(--bg-tertiary);
+  --heatmap-null-text: var(--text-muted);
+
+  --bg-code: var(--color-neutral-800);
+  --bg-code-block: var(--color-neutral-800);
+
+  --bg-chat-user: transparent;
+  --bg-chat-assistant: var(--color-neutral-800);
+  --bg-chat-input: var(--color-neutral-800);
+  --border-chat-input: var(--color-neutral-600);
+}
+
+/* Fonts loaded via @import at top of file */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Audio Player Custom Styles */
+
+/* Volume slider thumb — WebKit */
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--interactive-primary);
+  cursor: pointer;
+  border: 2px solid var(--bg-elevated);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.15s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  background: var(--interactive-primary-hover);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--interactive-primary) 15%, transparent);
+}
+
+.volume-slider::-webkit-slider-thumb:active {
+  transform: scale(1.05);
+}
+
+/* Volume slider thumb — Firefox */
+.volume-slider::-moz-range-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--interactive-primary);
+  cursor: pointer;
+  border: 2px solid var(--bg-elevated);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.15s ease;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  background: var(--interactive-primary-hover);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--interactive-primary) 15%, transparent);
+}
+
+.volume-slider::-moz-range-thumb:active {
+  transform: scale(1.05);
+}
+
+/* Play button glow pulse while audio is playing */
+@keyframes play-pulse {
+  0%, 100% { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 0 0 0 color-mix(in srgb, var(--interactive-primary) 30%, transparent); }
+  50%      { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 0 0 6px color-mix(in srgb, var(--interactive-primary) 0%, transparent); }
+}
+
+.audio-play-btn--active {
+  animation: play-pulse 2s ease-in-out infinite;
+}
+
+/* Smooth theme transition */
+html[data-theme-transitioning] * {
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease !important;
+}
+
+/* Typing indicator animation */
+@keyframes typing-dot {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-4px); }
+}
+
+/* Dark mode fix for provider SVG icons rendered as <img> that use fill="currentColor" */
+[data-theme="dark"] .provider-icon-invert { filter: invert(1); }
+
+/* Review Universe — border glow breathe */
+.review-border-glow {
+  animation: review-glow-breathe 4s ease-in-out infinite;
+}
+@keyframes review-glow-breathe {
+  0%, 100% { box-shadow: inset 0 0 48px 0 var(--review-glow-lo); }
+  50% { box-shadow: inset 0 0 64px 0 var(--review-glow-hi); }
+}
+
+@keyframes chat-widget-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes chat-widget-sweep {
+  0%, 100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes chat-widget-toast-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
