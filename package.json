@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pages": "BASE_PATH=/liver-forever-dashboard/ npm run build",
+    "deploy": "bash scripts/deploy-pages.sh",
     "lint": "eslint .",
     "preview": "vite preview"
   },

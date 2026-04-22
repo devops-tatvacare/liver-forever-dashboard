@@ -77,14 +77,25 @@ python3 scripts/build-doctors.py \
 
 ## Deployment
 
-A GitHub Action (`.github/workflows/deploy.yml`) runs on every push to `main`:
+Deployed to GitHub Pages using the **branch-source mode** — the built `dist/` is pushed to a `gh-pages` branch and GitHub serves it directly. This keeps the deploy token scoped to `repo` only (no `workflow` scope needed).
 
-1. `npm ci` — install exact dependencies
-2. `npm run build` with `BASE_PATH=/liver-forever-dashboard/` so asset URLs resolve under the Pages subpath
-3. Upload `dist/` as the Pages artifact
-4. Deploy
+```bash
+npm run deploy        # builds with BASE_PATH and pushes gh-pages branch
+```
 
-First-time setup: **Settings → Pages → Source = GitHub Actions**. After that, every push to `main` redeploys automatically.
+Under the hood (`scripts/deploy-pages.sh`):
+
+1. `BASE_PATH=/liver-forever-dashboard/ npm run build`
+2. Check out a worktree on `gh-pages` (or create orphan branch if missing)
+3. Sync `dist/` into the worktree, write `.nojekyll`
+4. Commit + push to `origin gh-pages`
+
+One-time setup (already done for this repo):
+
+```bash
+gh api repos/devops-tatvacare/liver-forever-dashboard/pages \
+  -X PUT -f "source[branch]=gh-pages" -f "source[path]=/"
+```
 
 ## Project layout
 
@@ -104,8 +115,8 @@ liver-forever-dashboard/
 ├── scripts/
 │   ├── mask-pii.py          # deterministic name + mobile pseudonymiser
 │   ├── export-scans.sql     # MySQL → scan rows (read-only)
-│   └── build-doctors.py     # Excel → doctor lookup JSON
-├── .github/workflows/deploy.yml
+│   ├── build-doctors.py     # Excel → doctor lookup JSON
+│   └── deploy-pages.sh      # build + push gh-pages branch
 └── vite.config.ts
 ```
 
