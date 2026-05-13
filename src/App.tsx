@@ -11,7 +11,7 @@ import {
   Sparkles, Filter, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,
   CheckCircle2, AlertTriangle, Shuffle, CircleCheck, CircleX,
   ArrowDownLeft, ArrowUpRight, ArrowDownRight, ArrowUpLeft,
-  HeartPulse, Gauge, ListChecks, Award, Database, X,
+  HeartPulse, Gauge, ListChecks, Award, Database, X, Menu,
   type LucideIcon,
 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/Badge';
 import { buildPatients, computeAggregates, overallVariant, doctorShort, doctorInfo, type Patient, type OverallTrend } from '@/lib/data';
 import { cn } from '@/utils/cn';
 import funnel from '@/data/funnel.json';
+import RegistrationFunnel from '@/pages/RegistrationFunnel';
 
 const TREND_COLORS: Record<OverallTrend, string> = {
   'Both Improved': 'var(--color-success)',
@@ -803,20 +804,109 @@ function PatientView({ patient, onBack }: { patient: Patient; onBack: () => void
   );
 }
 
+type View = 'outcomes' | 'funnel';
+
+const VIEW_META: Record<View, { label: string; icon: LucideIcon }> = {
+  outcomes: { label: 'Fibroscan Outcomes', icon: HeartPulse },
+  funnel: { label: 'Registration Funnel', icon: Activity },
+};
+
+function TopNav({ view, onChange }: { view: View; onChange: (v: View) => void }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const views: View[] = ['outcomes', 'funnel'];
+  const CurrentIcon = VIEW_META[view].icon;
+
+  return (
+    <div className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)]/95 backdrop-blur">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Desktop tabs */}
+        <nav className="hidden sm:flex items-center gap-1 h-11">
+          {views.map(v => {
+            const meta = VIEW_META[v];
+            const active = v === view;
+            return (
+              <button
+                key={v}
+                onClick={() => onChange(v)}
+                className={cn(
+                  'inline-flex items-center gap-1.5 px-3 h-8 rounded-[6px] text-[12px] font-medium transition-colors',
+                  active
+                    ? 'bg-[var(--color-brand-accent)]/25 text-[var(--text-brand)]'
+                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)]'
+                )}
+              >
+                <meta.icon className="h-3.5 w-3.5" />
+                {meta.label}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Mobile bar: current page label + burger */}
+        <div className="flex sm:hidden items-center justify-between h-11">
+          <div className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--text-primary)]">
+            <CurrentIcon className="h-3.5 w-3.5 text-[var(--text-brand)]" />
+            {VIEW_META[view].label}
+          </div>
+          <button
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            className="inline-flex items-center justify-center h-8 w-8 rounded-[6px] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]"
+          >
+            {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
+
+        {/* Mobile drawer */}
+        {menuOpen && (
+          <div className="sm:hidden border-t border-[var(--border-subtle)] py-2 flex flex-col gap-1">
+            {views.map(v => {
+              const meta = VIEW_META[v];
+              const active = v === view;
+              return (
+                <button
+                  key={v}
+                  onClick={() => { onChange(v); setMenuOpen(false); }}
+                  className={cn(
+                    'inline-flex items-center gap-2 px-3 h-9 rounded-[6px] text-[13px] font-medium text-left transition-colors',
+                    active
+                      ? 'bg-[var(--color-brand-accent)]/25 text-[var(--text-brand)]'
+                      : 'text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)]'
+                  )}
+                >
+                  <meta.icon className="h-4 w-4" />
+                  {meta.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const patients = useMemo(() => buildPatients(), []);
   const [selected, setSelected] = useState<Patient | null>(null);
+  const [view, setView] = useState<View>('outcomes');
 
-  // Scroll to top whenever the view switches (roster → patient → back).
+  // Scroll to top whenever the view switches (roster → patient → back, or tab change).
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
-  }, [selected]);
+  }, [selected, view]);
+
+  const content = view === 'funnel'
+    ? <RegistrationFunnel />
+    : selected
+      ? <PatientView patient={selected} onBack={() => setSelected(null)} />
+      : <AggregateView patients={patients} onOpenPatient={setSelected} />;
 
   return (
     <div className="min-h-screen bg-[var(--bg-secondary)]">
-      {selected
-        ? <PatientView patient={selected} onBack={() => setSelected(null)} />
-        : <AggregateView patients={patients} onOpenPatient={setSelected} />}
+      <TopNav view={view} onChange={(v) => { setView(v); setSelected(null); }} />
+      {content}
     </div>
   );
 }

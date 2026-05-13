@@ -1,0 +1,169 @@
+{
+  "generated_at": "2026-05-13T07:14:42+00:00",
+  "source_file": "Liver Forever - User Registration Data.xlsx",
+  "summary": {
+    "signed_up": 3166,
+    "app_login": 603,
+    "any_doc": 275,
+    "both_uploaded": 164,
+    "both_approved": 76,
+    "in_stages": 141,
+    "pending_verification": 88,
+    "docs_under_review_total": 282
+  },
+  "month_funnel": [
+    {
+      "month": 1,
+      "uploaded": 79,
+      "verified": 37
+    },
+    {
+      "month": 2,
+      "uploaded": 1,
+      "verified": 0
+    },
+    {
+      "month": 3,
+      "uploaded": 1,
+      "verified": 0
+    },
+    {
+      "month": 4,
+      "uploaded": 1,
+      "verified": 0
+    },
+    {
+      "month": 5,
+      "uploaded": 1,
+      "verified": 0
+    },
+    {
+      "month": 6,
+      "uploaded": 1,
+      "verified": 0
+    }
+  ],
+  "cohorts": [
+    {
+      "signup_month": "2025-07",
+      "signups": 180,
+      "logged_in": 46,
+      "any_doc": 4,
+      "both_uploaded": 1,
+      "both_approved": 1,
+      "in_stages": 2
+    },
+    {
+      "signup_month": "2025-08",
+      "signups": 554,
+      "logged_in": 166,
+      "any_doc": 45,
+      "both_uploaded": 25,
+      "both_approved": 23,
+      "in_stages": 24
+    },
+    {
+      "signup_month": "2025-09",
+      "signups": 497,
+      "logged_in": 127,
+      "any_doc": 47,
+      "both_uploaded": 24,
+      "both_approved": 23,
+      "in_stages": 18
+    },
+    {
+      "signup_month": "2025-10",
+      "signups": 239,
+      "logged_in": 32,
+      "any_doc": 27,
+      "both_uploaded": 21,
+      "both_approved": 20,
+      "in_stages": 17
+    },
+    {
+      "signup_month": "2025-11",
+      "signups": 340,
+      "logged_in": 56,
+      "any_doc": 26,
+      "both_uploaded": 15,
+      "both_approved": 5,
+      "in_stages": 15
+    },
+    {
+      "signup_month": "2025-12",
+      "signups": 272,
+      "logged_in": 31,
+      "any_doc": 19,
+      "both_uploaded": 10,
+      "both_approved": 1,
+      "in_stages": 6
+    },
+    {
+      "signup_month": "2026-01",
+      "signups": 261,
+      "logged_in": 35,
+      "any_doc": 30,
+      "both_uploaded": 15,
+      "both_approved": 1,
+      "in_stages": 18
+    },
+    {
+      "signup_month": "2026-02",
+      "signups": 296,
+      "logged_in": 33,
+      "any_doc": 21,
+      "both_uploaded": 13,
+      "both_approved": 1,
+      "in_stages": 11
+    },
+    {
+      "signup_month": "2026-03",
+      "signups": 264,
+      "logged_in": 29,
+      "any_doc": 20,
+      "both_uploaded": 14,
+      "both_approved": 0,
+      "in_stages": 12
+    },
+    {
+      "signup_month": "2026-04",
+      "signups": 215,
+      "logged_in": 36,
+      "any_doc": 28,
+      "both_uploaded": 21,
+      "both_approved": 1,
+      "in_stages": 12
+    },
+    {
+      "signup_month": "2026-05",
+      "signups": 43,
+      "logged_in": 10,
+      "any_doc": 8,
+      "both_uploaded": 5,
+      "both_approved": 0,
+      "in_stages": 6
+    }
+  ],
+  "by_source": [
+    {
+      "source": "bot",
+      "sign_ups": 2840,
+      "app_login": 421,
+      "any_doc": 193,
+      "both_uploaded": 96,
+      "both_approved": 60
+    },
+    {
+      "source": "web",
+      "sign_ups": 325,
+      "app_login": 181,
+      "any_doc": 82,
+      "both_uploaded": 68,
+      "both_approved": 16
+    }
+  ],
+  "notes": {
+    "coach_eligible_tag_total": 141,
+    "coach_eligible_with_both_approved": 37
+  }
+}
